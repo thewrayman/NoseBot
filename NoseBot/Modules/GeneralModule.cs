@@ -16,7 +16,18 @@ namespace NoseBot.Modules
         public async Task GetHelp()
         {
             Console.WriteLine("executing help command");
-            string helpstring = "List of commands for this bot:\n**!!start** - tells the bot start monitoring for live streams (notifies in same channel)\n**!!add <twitch name or link>** - to add a streamer to watch out for\n**!!remove <twitch name or link>** - to remove a streamer from the watch list\n**!!list** - lists current watch list";
+            string helpstring = "";
+            helpstring += "List of commands for this bot:\n**!!start** - tells the bot start monitoring for live streams (notifies in same channel)\n";
+            helpstring += "**!!stop** - Tells the bot to stop monitoring (NOTE this may take up to 1 minute to fufil)\n";
+            helpstring += "**!!add <twitch name or link>** - to add a streamer to watch out for\n";
+            helpstring += "**!!remove <twitch name or link>** - to remove a streamer from the watch list\n";
+            helpstring += "**!!notify <on/off>** - Adds the “notify” role to the user invoking the command. (Creates the role if it doesn’t already exist)\n";
+            helpstring += "**!!list** - lists current watch list";
+            helpstring += "\n";
+            helpstring += "**!!prefix <new prefix>** - Changes the default or existing prefix to the new one entered";
+            helpstring += "**!!addresponse <trigger> <response>** - The bot will watch out for the trigger word and reply with a response when seen";
+            helpstring += "**!!deleteresponse <trigger>** - Deletes the response for that trigger";
+            helpstring += "**!!responses** - Lists the current stored responses for this server";
             await ReplyAsync(helpstring);
         }
 

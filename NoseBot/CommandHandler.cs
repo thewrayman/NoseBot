@@ -80,19 +80,36 @@ namespace NoseBot
                 {
                     //string emote = "<:dampC:277086968905728000>";
 
-                    //await SendAsync("PUT", () => $"channels/{channelId}/messages/{messageId}/reactions/{emoji}/@me", ids, options: options).ConfigureAwait(false);
+                    //await SendAsync("PUT", () => $"channels/{channelId}/messages/{messageId}/reactions/{emoji}/@me", ids, options: options).ConfigureAwait(false)
+                    Dictionary<string, int> messageorder = new Dictionary<string, int>();
+
                     foreach (KeyValuePair<string, string> entry in customargs)
                     {
                         if (context.Message.Content.ToLower().Contains(entry.Key.ToLower()))
                         {
+                            
                             Console.WriteLine("contains command");
-                            await context.Channel.SendMessageAsync(entry.Value);
+                            messageorder.Add(entry.Value, context.Message.Content.ToLower().IndexOf(entry.Key.ToLower()));
                         }
+                    }
+                    if (messageorder.Count > 0)
+                    {
+                        await SendCustomMessages(context, messageorder);
                     }
                 }
 
 
             }
+        }
+        private async Task SendCustomMessages(SocketCommandContext context, Dictionary<string,int> foundcmds)
+        {
+            var ordered = foundcmds.OrderBy(x => x.Value);
+            string outputstr = "";
+            foreach(KeyValuePair<string, int> word in ordered)
+            {
+                outputstr += word.Key + "\n";
+            }
+            await context.Channel.SendMessageAsync(outputstr);
         }
     }
 

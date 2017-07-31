@@ -93,6 +93,7 @@ namespace NoseBot.Modules
             {
                 await ReplyAsync("Currently not monitoring the streams, use **start** to begin monitoring!");
             }
+            await Context.Client.SetGameAsync("AFK");
             await Context.Message.DeleteAsync();
         }
 
@@ -154,7 +155,13 @@ namespace NoseBot.Modules
             Console.WriteLine("leaving deletestreamer");
         }
 
-        [Group("notify")]
+        [Command("notify")]
+        public async Task NotifyBase()
+        {
+            await ReplyAsync($"{Context.User.Mention} please try using **notify on/off** to toggle notifications for yourself");
+        }
+
+        [Group("notify"), Name("Notify")]
         public class NotifyMe : ModuleBase
         {
             [Command("on")]
@@ -174,18 +181,17 @@ namespace NoseBot.Modules
 
                 var guildrole = guildUser.Guild.Roles.FirstOrDefault(x => x.Name == "notify");
                 Discord.IRole role = null;
-
+                SocketUserMessage outmessage = null; 
                 //if role doesn't exist
                 if (guildrole == null)
                 {
                     try
                     {
-                        Discord.GuildPermissions newrole = new Discord.GuildPermissions(bool mentionEveryone = true);
                         //try to create role and assign it
-                        role = await Context.Guild.CreateRoleAsync("notify", color: Discord.Color.DarkOrange, permissions: newrole);
+                        role = await Context.Guild.CreateRoleAsync("notify", color: Discord.Color.DarkOrange);
                         await ReplyAsync("Created a **notify** role as one did not already exist");
                         await guildUser.AddRoleAsync(role);
-                        await ReplyAsync($"{guildUser.Mention} you will now be notified for upcoming streams!");
+                        outmessage = await ReplyAsync($"{guildUser.Mention} you will now be notified for upcoming streams!") as SocketUserMessage;
                     }
                     catch (Exception e)
                     {
@@ -196,16 +202,16 @@ namespace NoseBot.Modules
                 }
                 else
                 {
+                    Console.WriteLine("adding existing role to user");
                     //if role exists, just try to assign it
                     role = guildUser.Guild.Roles.FirstOrDefault(x => x.Name == "notify");
                     await guildUser.AddRoleAsync(role);
                     Console.WriteLine("Added notify role to user");
-                    await ReplyAsync($"{guildUser.Mention} you will now be notified for upcoming streams!");
+                    outmessage = await ReplyAsync($"{guildUser.Mention} you will now be notified for upcoming streams!") as SocketUserMessage;
                     
                     
                 }
                 await Context.Message.DeleteAsync();
-
             }
 
             [Command("off")]
@@ -215,21 +221,20 @@ namespace NoseBot.Modules
                 //check the user has the role
                 var guildUser = Context.User as SocketGuildUser;
                 var guildrole = guildUser.Roles.FirstOrDefault(x => x.Name == "notify");
-
+                SocketUserMessage outmessage = null;
                 Discord.IRole role = guildrole;
                 if (guildrole == null)
                 {
-                    await ReplyAsync("You don't have the notify role, wyd fam");
+                    outmessage = await ReplyAsync("You don't have the notify role, wyd fam") as SocketUserMessage;
                 }
                 else
                 {
                     await guildUser.RemoveRoleAsync(role);
-                    await ReplyAsync($"{guildUser.Mention} you will no longer be notified for upcoming streams!");
+                    outmessage = await ReplyAsync($"{guildUser.Mention} you will no longer be notified for upcoming streams!") as SocketUserMessage;
                 }
                 await Context.Message.DeleteAsync();
             }
         }
-
 
 
         public async Task StartMon(string startfile)
