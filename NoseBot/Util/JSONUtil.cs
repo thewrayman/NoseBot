@@ -17,7 +17,6 @@ namespace NoseBot.Util
         public static void WriteJsonToFile(object jsonobj, string filename, string jsonstring = null)
         {
             string truefilename = Path.Combine(FileDirUtil.GetCurDir(),filename);
-            Console.WriteLine("writing to file at " + truefilename);
             string json = jsonstring;
             if (jsonobj != null)
             {
@@ -35,10 +34,9 @@ namespace NoseBot.Util
             {
                 try
                 {
-                    Console.WriteLine("wrting to file "+truefilename);
                     file.Write(json);
                     file.Close();
-                    Console.WriteLine("written");
+                    Console.WriteLine("written "+truefilename);
                 }
                 catch (Exception e)
                 {

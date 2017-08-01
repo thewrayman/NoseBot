@@ -181,7 +181,8 @@ namespace NoseBot.Modules
 
                 var guildrole = guildUser.Guild.Roles.FirstOrDefault(x => x.Name == "notify");
                 Discord.IRole role = null;
-                SocketUserMessage outmessage = null; 
+                SocketUserMessage outmessage = null;
+
                 //if role doesn't exist
                 if (guildrole == null)
                 {
@@ -190,27 +191,20 @@ namespace NoseBot.Modules
                         //try to create role and assign it
                         role = await Context.Guild.CreateRoleAsync("notify", color: Discord.Color.DarkOrange);
                         await ReplyAsync("Created a **notify** role as one did not already exist");
-                        await guildUser.AddRoleAsync(role);
-                        outmessage = await ReplyAsync($"{guildUser.Mention} you will now be notified for upcoming streams!") as SocketUserMessage;
                     }
                     catch (Exception e)
                     {
                         await ReplyAsync("Could not create a role to notify, please check permissions or manually add");
                         return;
                     }
+                }
 
-                }
-                else
-                {
-                    Console.WriteLine("adding existing role to user");
-                    //if role exists, just try to assign it
-                    role = guildUser.Guild.Roles.FirstOrDefault(x => x.Name == "notify");
-                    await guildUser.AddRoleAsync(role);
-                    Console.WriteLine("Added notify role to user");
-                    outmessage = await ReplyAsync($"{guildUser.Mention} you will now be notified for upcoming streams!") as SocketUserMessage;
-                    
-                    
-                }
+                Console.WriteLine("adding role to user");
+                await guildUser.AddRoleAsync(role);
+                Console.WriteLine("Added notify role to user");
+
+                outmessage = await ReplyAsync($"{guildUser.Mention} you will now be notified for upcoming streams!") as SocketUserMessage;
+
                 await Context.Message.DeleteAsync();
             }
 
