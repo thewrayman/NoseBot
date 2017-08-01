@@ -71,8 +71,6 @@ namespace NoseBot
                 if (!result.IsSuccess)
                     await context.Channel.SendMessageAsync(result.ToString());
 
-
-                Console.WriteLine("Handling incoming command.." + msg.Content);
             }
             if (customargs != null)
             {
@@ -88,7 +86,6 @@ namespace NoseBot
                         if (context.Message.Content.ToLower().Contains(entry.Key.ToLower()))
                         {
                             
-                            Console.WriteLine("contains command");
                             messageorder.Add(entry.Value, context.Message.Content.ToLower().IndexOf(entry.Key.ToLower()));
                         }
                     }
