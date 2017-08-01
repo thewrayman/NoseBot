@@ -120,5 +120,14 @@ namespace NoseBot.Modules
 
             await ReplyAsync($"The prefix for the bot has been changed to **{newpref}**");
         }
+
+        [Command("restartbot")]
+        [Remarks("Restarts the server instance of the bot")]
+        public async Task RestartBot()
+        {
+            await ReplyAsync("**Attempting to restart the bot instance..**");
+            MessageUtil.AttemptGuildsMessage(Context, "**NoseBot is current restarting, apologies for the inconvenience. Monitors will be stopped**");
+            ProgramUtil.RestartBot();
+        }
     }
 }
