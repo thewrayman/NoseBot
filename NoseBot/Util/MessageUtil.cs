@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using NoseBot.Modules;
+using Discord.Commands;
 
 namespace NoseBot.Util
 {
@@ -120,6 +121,30 @@ namespace NoseBot.Util
         {
             Console.WriteLine($"Checking if role {name} exists");
             return roles.Any(x => x.Name == name);
+        }
+        
+
+        public async static void AttemptGuildsMessage(SocketCommandContext context, string message)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            IReadOnlyCollection<SocketGuild> guilds = context.Client.Guilds;
+
+            foreach(SocketGuild tguild in guilds)
+            {
+                try
+                {
+                    await tguild.DefaultChannel.SendMessageAsync(message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Failed to send message to " + tguild.DefaultChannel.Name);
+                }              
+            }
         }
 
     }
