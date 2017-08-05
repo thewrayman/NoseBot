@@ -99,6 +99,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Objects\Channel.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Objects\Guild.cs" />
     <Compile Include="Objects\Guilds.cs" />
