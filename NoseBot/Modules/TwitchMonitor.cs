@@ -48,11 +48,23 @@ namespace NoseBot.Modules
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
             string startfile = Path.Combine(guildpath, FileDirUtil.JSONSTART);
+            string stopfile = Path.Combine(guildpath, FileDirUtil.JSONSTOP);
+
+            //if already running
             if (File.Exists(startfile))
             {
                 await ReplyAsync("Bot already running, if it appears to be broken try to restart");
                 return;
             }
+            //if a stop command already issued but not completed, don't try to re-start
+            if (File.Exists(stopfile))
+            {
+                await ReplyAsync("Awaiting termination of the existing session before restarting, please try again shortly!");
+                return;
+            }
+
+            //if not already running + no stop command in progress, start the bot
+
             FileStream fs = File.Create(startfile);
             fs.Flush();
             fs.Close();
@@ -75,12 +87,21 @@ namespace NoseBot.Modules
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
             string startfile = Path.Combine(guildpath, FileDirUtil.JSONSTART);
+            string stopfile = Path.Combine(guildpath, FileDirUtil.JSONSTOP);
+            FileStream fs = File.Create(stopfile);
+            fs.Flush();
+            fs.Close();
+            if (File.Exists(stopfile))
+            {
+                await ReplyAsync("Waiting for previous session to end, please try again shortly");
+            }
             if (File.Exists(startfile))
             {
                 try
                 {
                     File.Delete(startfile);
                     await ReplyAsync("Monitor has been stopped! Please wait up to 1 minute before attempting a restart..");
+                    Console.WriteLine("stopped");
                 }
                 catch (Exception e)
                 {
@@ -247,6 +268,21 @@ namespace NoseBot.Modules
                 }
                 
             }
+
+            //once the monitor stops, remove the stop file
+            string guildid = Context.Guild.Id.ToString();
+            string guildpath = FileDirUtil.GetGuildDir(guildid);
+            try
+            {
+                File.Delete(Path.Combine(guildpath, FileDirUtil.JSONSTOP));
+                Console.WriteLine("removed stop file");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("could not remove stop file: " + e);
+
+            }
+            
             await ReplyAsync("**Monitor stopped**");
         }
 
@@ -291,10 +327,12 @@ namespace NoseBot.Modules
                 }
             }
 
+            Console.WriteLine("check1");
             //check the current live against previous live
             //if set as live when not currently live, set to offline
             Dictionary<string,string> newDictionary = live.ToDictionary(entry => entry.Key,
                                                entry => entry.Value);
+            Console.WriteLine("check2");
             foreach (KeyValuePair<string, string> entry in live)
             {
                 if (entry.Value == "live")
@@ -305,10 +343,12 @@ namespace NoseBot.Modules
                     }
                 }
             }
+            Console.WriteLine("check3");
             live = newDictionary.ToDictionary(entry => entry.Key,
                                                entry => entry.Value);
+            Console.WriteLine("check4");
             JSONUtil.WriteJsonToFile(live, guildlive);
-            Console.WriteLine("5");
+            Console.WriteLine("Completed check\n");
 
         }
 
