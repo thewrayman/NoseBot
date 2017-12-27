@@ -10,6 +10,7 @@ using System.Linq;
 using NoseBot.Util;
 using Microsoft.Extensions.DependencyInjection;
 using NoseBot.Services;
+using System.Configuration;
 
 namespace NoseBot
 {
@@ -34,7 +35,7 @@ namespace NoseBot
             _client.MessageReceived += MessageReceived;
             _client.JoinedGuild += JoinedGuild;
             await _client.SetGameAsync("AFK");
-            string token = "MzM5NTA1NTUxMTE1NDE5NjQ4.DFlETQ.AWXndihnyvC0FSnDktqyRzUB0is"; // Remember to keep this private!
+            string token = ConfigurationManager.AppSettings["token"]; // Remember to keep this private!
             
             var services = ConfigureServices();
             //services.GetRequiredService<LogService>();

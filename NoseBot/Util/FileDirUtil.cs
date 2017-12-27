@@ -18,8 +18,8 @@ namespace NoseBot.Util
         public const string JSONSETTINGS = @"Settings.json";
         public const string JSONSTART = @"Start.json";
         public const string JSONSTOP = @"Stop.json";
-        public const string EVENTLOG = "@Events.txt";
-        public const string PROCESSLOG = "@Log.txt";
+        public const string EVENTLOG = @"Events.txt";
+        public const string PROCESSLOG = @"Log.txt";
 
 
         public static async Task EstablishGuildFiles(Guild guild)

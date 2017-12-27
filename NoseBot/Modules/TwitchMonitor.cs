@@ -298,10 +298,10 @@ namespace NoseBot.Modules
             Dictionary<string, string> live = JSONUtil.GetJsonToDic<string, string>(guildlive);
             List<string> liveusers = new List<string>();
 
-            string s = string.Join(",", users.Select(x => x.Value));
+            string s = string.Join("&channel=", users.Select(x => x.Value));
 
             string response = SendRequest(BaseString + "streams/?channel=", s, "Requesting live channels for " + s);
-
+            Console.WriteLine("channelresponse" + response);
             JSONUtil.WriteJsonToFile(null, guildstream, response);
 
             Streams streams = JsonConvert.DeserializeObject<Streams>(response);
@@ -358,7 +358,7 @@ namespace NoseBot.Modules
             var client = new RestClient(url + suffix);
             var request = new RestRequest(Method.GET);
 
-            request.AddHeader("Client-ID", "uo6dggojyb8d6soh92zknwmi5ej1q2");
+            request.AddHeader("Client-ID", "vm65hok0u8pse4s6h8s7f5ecvl20yt");
             request.AddHeader("Accept", "application/vnd.twitchtv.v5+json");
             request.AddParameter("application/vnd.twitchtv.v5+json", "bodykey=bodyval", ParameterType.RequestBody);
 
