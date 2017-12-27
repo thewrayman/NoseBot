@@ -18,12 +18,14 @@ namespace NoseBot
         private CommandService _cmds;
         private TwitchService _twitch;
         private IServiceProvider _provider;
+        private BGLogger _logger;
 
         public CommandHandler(IServiceProvider provider, DiscordSocketClient client, CommandService commands)
         {
             _cmds = commands;
             _client = client;
             _provider = provider;
+            
         }
         public CommandHandler() { }
         public async Task InitializeAsync(IServiceProvider provider, DiscordSocketClient c)
@@ -33,6 +35,7 @@ namespace NoseBot
             _provider = provider;
             _client.MessageReceived += HandleCommandAsync;
             await _cmds.AddModulesAsync(Assembly.GetEntryAssembly());
+            _logger = new BGLogger();
         }
 
         //public async Task InstallAsync(DiscordSocketClient c)
@@ -58,7 +61,7 @@ namespace NoseBot
             string id = context.Guild.Id.ToString();
             Settings guildsettings = JSONUtil.GetSettingsObj(id);
             Dictionary<string, string> customargs = guildsettings.customcommands;
-
+            GetLogWords(context);
             int argPos = 0;
             if (msg.HasStringPrefix(guildsettings.prefix, ref argPos) ||
                 msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
@@ -107,6 +110,34 @@ namespace NoseBot
                 outputstr += word.Key + "\n";
             }
             await context.Channel.SendMessageAsync(outputstr);
+        }
+
+        private async Task GetLogWords(SocketCommandContext context)
+        {
+            if (!context.Message.Author.IsBot)
+            {
+                string user = context.Message.Author.Id.ToString();
+                List<string> words = context.Message.Content.Replace(",", " ").Split(' ').ToList();
+                List<string> finalwords = new List<string>();
+
+                foreach(string word in words)
+                {
+                    if (!Words._stops.Keys.Contains(word.ToLower())){
+                        finalwords.Add(word);
+                    }
+                    
+                }
+                string id = context.Guild.Id.ToString();
+                string wordstring = string.Join(", ", finalwords);
+                wordstring = wordstring.Replace("\n", string.Empty);
+                //Console.WriteLine("new message from user " + user + "with words: " + wordstring);
+                if (wordstring.Length > 0)
+                {
+                    _logger.LogMessage(user + ", " + wordstring, id);
+                }
+                
+            }
+            
         }
     }
 

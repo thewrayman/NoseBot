@@ -10,6 +10,7 @@ using System.Linq;
 using NoseBot.Util;
 using Microsoft.Extensions.DependencyInjection;
 using NoseBot.Services;
+using System.Configuration;
 
 namespace NoseBot
 {
@@ -34,9 +35,10 @@ namespace NoseBot
             _client.MessageReceived += MessageReceived;
             _client.JoinedGuild += JoinedGuild;
             await _client.SetGameAsync("AFK");
-            string token = "MzM5NTA1NTUxMTE1NDE5NjQ4.DFlETQ.AWXndihnyvC0FSnDktqyRzUB0is"; // Remember to keep this private!
+            string token = ConfigurationManager.AppSettings["token"]; // Remember to keep this private!
             
             var services = ConfigureServices();
+            //services.GetRequiredService<LogService>();
             await services.GetRequiredService<CommandHandler>().InitializeAsync(services, _client);
             await services.GetRequiredService<TwitchService>().InitializeAsync(services);
 
@@ -67,6 +69,7 @@ namespace NoseBot
                 foreach(Guild guild in guilds.guilds)
                 {
                     string startfile = FileDirUtil.GetGuildFile(guild.id, FileDirUtil.JSONSTART);
+                    string stopfile = FileDirUtil.GetGuildFile(guild.id, FileDirUtil.JSONSTOP);
                     if (File.Exists(startfile))
                     {
                         try
@@ -84,6 +87,23 @@ namespace NoseBot
                         Console.WriteLine("no start file present, carry on");
                     }
 
+                    if (File.Exists(stopfile))
+                    {
+                        try
+                        {
+                            File.Delete(FileDirUtil.GetGuildFile(guild.id, FileDirUtil.JSONSTOP));
+                            Console.WriteLine("Cleaned up stop files for " + guild.name);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("couldn't clean up stop files " + e);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("no stop file present, carry on");
+                    }
+
                 }
             }
         }
@@ -93,6 +113,9 @@ namespace NoseBot
                 // Base
                 .AddSingleton(_client)
                 .AddSingleton<CommandHandler>()
+                //logs
+                //.AddLogging()
+                //.AddSingleton<LogService>()
                 // Extra
                 .AddSingleton<TwitchService>()
                 .BuildServiceProvider();

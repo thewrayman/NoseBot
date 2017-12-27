@@ -16,18 +16,25 @@ namespace NoseBot.Modules
         public async Task GetHelp()
         {
             Console.WriteLine("executing help command");
+            string id = Context.Guild.Id.ToString();
+            string settingsfile = FileDirUtil.GetGuildFile(id, FileDirUtil.JSONSETTINGS);
+            Settings guildsettings = JSONUtil.GetSettingsObj(id);   //get the settings for this guild
+
             string helpstring = "";
-            helpstring += "List of commands for this bot:\n**!!start** - tells the bot start monitoring for live streams (notifies in same channel)\n";
-            helpstring += "**!!stop** - Tells the bot to stop monitoring (NOTE this may take up to 1 minute to fufil)\n";
-            helpstring += "**!!add <twitch name or link>** - to add a streamer to watch out for\n";
-            helpstring += "**!!remove <twitch name or link>** - to remove a streamer from the watch list\n";
-            helpstring += "**!!notify <on/off>** - Adds the “notify” role to the user invoking the command. (Creates the role if it doesn’t already exist)\n";
-            helpstring += "**!!list** - lists current watch list";
+            helpstring += "List of commands for this bot:\n**{0}start** - tells the bot start monitoring for live streams (notifies in same channel)\n";
+            helpstring += "**{0}stop** - Tells the bot to stop monitoring (NOTE this may take up to 1 minute to fufil)\n";
+            helpstring += "**{0}add <twitch name or link>** - to add a streamer to watch out for\n";
+            helpstring += "**{0}remove <twitch name or link>** - to remove a streamer from the watch list\n";
+            helpstring += "**{0}notify <on/off>** - Adds the “notify” role to the user invoking the command. (Creates the role if it doesn’t already exist)\n";
+            helpstring += "**{0}list** - lists current watch list";
             helpstring += "\n";
-            helpstring += "**!!prefix <new prefix>** - Changes the default or existing prefix to the new one entered";
-            helpstring += "**!!addresponse <trigger> <response>** - The bot will watch out for the trigger word and reply with a response when seen";
-            helpstring += "**!!deleteresponse <trigger>** - Deletes the response for that trigger";
-            helpstring += "**!!responses** - Lists the current stored responses for this server";
+            helpstring += "**{0}prefix <new prefix>** - Changes the default or existing prefix to the new one entered\n";
+            helpstring += "**{0}addresponse <trigger> <response>** - The bot will watch out for the trigger word and reply with a response when seen\n";
+            helpstring += "**{0}deleteresponse <trigger>** - Deletes the response for that trigger\n";
+            helpstring += "**{0}responses** - Lists the current stored responses for this server";
+            helpstring += "**{0}stats <user>** - Returns the most used words from that user\n";
+            helpstring += "**{0}stats all** - Returns the top word for each user in the chat log\n";
+            helpstring = String.Format(helpstring, guildsettings.prefix);
             await ReplyAsync(helpstring);
         }
 

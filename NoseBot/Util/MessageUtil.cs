@@ -52,18 +52,19 @@ namespace NoseBot.Util
             string idpath = Path.Combine(guildpath, FileDirUtil.JSONIDS);
 
 
-            Console.WriteLine("gettign channel ids");
+            Console.WriteLine("getting channel ids");
             Dictionary<string, string> nameid = new Dictionary<string, string>();
             Dictionary<string, string> live = JSONUtil.GetJsonToDic<string, string>(livepath);
             List<string> names = JSONUtil.GetJsonToList<string>(namepath);
             string searchstring = "tinietinie";
             if (names.Count > 1)
             {
-                searchstring = string.Join(",", names.Select(x => x));
+                searchstring = string.Join("&login=", names.Select(x => x));
             }
 
 
-            string response = TwitchMonitor.SendRequest(BaseString + "users?login=" + searchstring, null, "Channels");
+            string response = TwitchMonitor.SendRequest (BaseString + "users?login=" + searchstring, null, "Channels");
+            Console.WriteLine("loginresponse"+ response);
             JSONUtil.WriteJsonToFile(null, Path.Combine(guildpath,FileDirUtil.JSONUSERS), response);
             Console.WriteLine("written users to file");
             Users users = JsonConvert.DeserializeObject<Users>(response);
@@ -99,9 +100,11 @@ namespace NoseBot.Util
             string namepath = Path.Combine(guildpath, FileDirUtil.JSONNAMES);
             string livepath = Path.Combine(guildpath, FileDirUtil.JSONLIVE);
             string idpath = Path.Combine(guildpath, FileDirUtil.JSONIDS);
+
             List<string> names = JSONUtil.GetJsonToList<string>(namepath);
             Dictionary<string, string> live = JSONUtil.GetJsonToDic<string, string>(livepath);
             Dictionary<string, string> ids = JSONUtil.GetJsonToDic<string, string>(idpath);
+
             if (remove)
             {
                 names.Remove(name);
@@ -123,7 +126,6 @@ namespace NoseBot.Util
             return roles.Any(x => x.Name == name);
         }
         
-
         public async static void AttemptGuildsMessage(SocketCommandContext context, string message)
         {
             var settings = new JsonSerializerSettings
