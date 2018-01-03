@@ -329,7 +329,9 @@ namespace NoseBot.Util
         { "yourselves", true },
         { "u", true},
             { "$stats", true},
-            { " ", true}
+            { " ", true},
+            { "  ", true},
+            { "user", true}
     };
     }
 }
