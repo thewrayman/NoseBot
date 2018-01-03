@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Modules\Analytics.cs" />
+    <Compile Include="Modules\Crypto.cs" />
     <Compile Include="Objects\Channel.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Objects\ChatLog.cs" />
