@@ -117,7 +117,10 @@ namespace NoseBot
             if (!context.Message.Author.IsBot)
             {
                 string user = context.Message.Author.Id.ToString();
-                List<string> words = context.Message.Content.Replace(",", " ").Split(' ').ToList();
+                string message = context.Message.Content.Replace(", ", " ");
+                message = message.Replace(",", " ");
+                message = message.Replace("  ", " ");
+                List<string> words = message.Split(' ').ToList();
                 List<string> finalwords = new List<string>();
 
                 foreach(string word in words)

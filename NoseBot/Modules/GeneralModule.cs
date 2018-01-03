@@ -34,6 +34,9 @@ namespace NoseBot.Modules
             helpstring += "**{0}responses** - Lists the current stored responses for this server";
             helpstring += "**{0}stats <user>** - Returns the most used words from that user\n";
             helpstring += "**{0}stats all** - Returns the top word for each user in the chat log\n";
+            helpstring += "**{0}stats server** - Returns the top words in the server\n";
+            helpstring += "\n";
+            helpstring += "**{0}pc <coin> <currency>(opt) full(opt)** - Returns basic or full price info for a coin\n";
             helpstring = String.Format(helpstring, guildsettings.prefix);
             await ReplyAsync(helpstring);
         }

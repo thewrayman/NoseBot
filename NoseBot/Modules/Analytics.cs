@@ -33,7 +33,13 @@ namespace NoseBot.Modules
             [Command("server")]
             public async Task GetServerStats()
             {
+                Console.WriteLine("Command: Stats server");
                 //get the monthly stats for the server as a whole
+                Discord.IUserMessage holdon = await ReplyAsync("Hold on whist I calculate the stats..");
+                var aggregate = AggregateRecords(Context as SocketCommandContext);
+                string message = GetTopServerStats(aggregate);
+                await ReplyAsync(message);
+                holdon.DeleteAsync();
 
             }
 
@@ -42,11 +48,11 @@ namespace NoseBot.Modules
             {
                 Console.WriteLine("Command: Stats All");
                 //show the stats for every user
-                ReplyAsync("Hold on whist I calculate the stats..");
+                Discord.IUserMessage holdon = await ReplyAsync("Hold on whist I calculate the stats..");
                 var aggregate = AggregateRecords(Context as SocketCommandContext);
                 string message = PrintTopDictValues(aggregate);
                 await ReplyAsync(message);
-                //{username : {word:count, ...} }
+                holdon.DeleteAsync();
 
             }
 
@@ -55,6 +61,7 @@ namespace NoseBot.Modules
             {
                 Console.WriteLine("Getting stats for user "+user);
                 string message = "";
+
                 if (!user.StartsWith("<@"))
                 {
                     message = "Please make sure you are tagging a user";
@@ -74,7 +81,7 @@ namespace NoseBot.Modules
         //read in the log file csv format into a chatlog object
         public static ChatRecord FromCSV(string record)
         {
-            Console.WriteLine("fromcsv:"+record);
+
             // {date, userid, [word1:2, word3:7...]}
             ChatRecord crecord = new ChatRecord();
             string[] fields = record.Split(',');
@@ -93,9 +100,9 @@ namespace NoseBot.Modules
 
             crecord.User = userid;
             crecord.TimeStamp = timestamp;
-            Console.WriteLine("attempting to copy");
+
             List<string> msgwords = fields.ToList().GetRange(2, fields.Length - 2);
-            Console.WriteLine("copied");
+
             //count the number of instances of this word in the record
             foreach(string word in msgwords)
             {
@@ -130,10 +137,10 @@ namespace NoseBot.Modules
             {
                 if (aggregate.ContainsKey(record.User))
                 {
-                    Console.WriteLine("Contained key " + record.User);
+                    //Console.WriteLine("Contained key " + record.User);
                     foreach (string word in record.Words.Keys)
                     {
-                        Console.WriteLine("looking at word " + word);
+                        //Console.WriteLine("looking at word " + word);
                         if (aggregate[record.User].ContainsKey(word))
                         {
                             aggregate[record.User][word] += record.Words[word];
@@ -147,7 +154,6 @@ namespace NoseBot.Modules
                 }
                 else
                 {
-                    Console.WriteLine("new user added, initialising");
                     aggregate.Add(record.User, record.Words);
                 }
             }
@@ -163,16 +169,8 @@ namespace NoseBot.Modules
                 var sortedDict = from entry in aggregate[pair.Key] orderby entry.Value descending select entry;
                 aggregate[pair.Key] = sortedDict.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
-            Console.WriteLine("ordered");
-            //foreach (KeyValuePair<string, Dictionary<string,int>> kvp in aggregate)
-            //{
-            //    //textBox3.Text += ("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
-                
-            //    foreach(KeyValuePair<string, int> kv in kvp.Value)
-            //    {
-            //        Console.WriteLine("Key = {0}, word: {1},Value = {2}", kvp.Key,kv.Key, kv.Value);
-            //    }
-            //}
+            Console.WriteLine("Aggregated orederd recrods");
+
             return aggregate;
 
         }
@@ -185,13 +183,13 @@ namespace NoseBot.Modules
             foreach (KeyValuePair<string, Dictionary<string, int>> kvp in dict)
             {
                 Console.WriteLine("kvp with key :" + kvp.Key);
-                //<@201909896357216256> var max = results.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+
                 string tempstr = "<@{0}> used **{1}** {2} times, wordlen: {3}";
                 var max = kvp.Value.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
                 response += string.Format(tempstr, kvp.Key.TrimStart(), max, kvp.Value[max], max.Length) + Environment.NewLine;
-                Console.WriteLine("response: " + response);
-            }
 
+            }
+            Console.WriteLine("Final response: " + response);
             return response;
         }
 
@@ -227,6 +225,50 @@ namespace NoseBot.Modules
             }
             return "No chat log found for this user, try another!";
             
+        }
+
+        public static string GetTopServerStats(Dictionary<string, Dictionary<string, int>> dict)
+        {
+            Console.WriteLine("Getting server stats..");
+            string response = "";
+            if (dict.Count < 1) { response = "No messages stored  yet"; Console.WriteLine("no values"); return response; };
+            Dictionary<string, int> wordcountdict = new Dictionary<string, int>();
+
+            foreach(KeyValuePair<string,Dictionary<string,int>> kvp in dict)
+            {
+                foreach(KeyValuePair<string,int> kp in kvp.Value)
+                {
+                    //for each word:count pair for that user
+                    //if we already aggregated that word, then increase count
+                    if (wordcountdict.ContainsKey(kp.Key))
+                    {
+                        wordcountdict[kp.Key] += kp.Value;
+                    }
+                    //else, add the word to the aggregate
+                    else
+                    {
+                        wordcountdict.Add(kp.Key,kp.Value);
+                    }
+                }
+            }
+
+            var sortedDict = from entry in wordcountdict orderby entry.Value descending select entry;
+            wordcountdict = sortedDict.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            Console.WriteLine("Got the top words");
+            response = "Here are the most used words in this server:\n";
+
+            int i = 0;
+            foreach(KeyValuePair<string,int> kvp in wordcountdict)
+            {
+                if(i < 10)
+                {
+                    response += $"*{i+1}*. **{kvp.Key}** - {kvp.Value} time(s)" + Environment.NewLine;
+                    i += 1;
+                }
+            }
+            
+            return response;
+
         }
         
     }
