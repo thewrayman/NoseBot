@@ -1,0 +1,6 @@
+﻿//TODO - 06/01/2018
+- Move all strings to static string object
+- Move coinmarket to separate API object
+- Move rest interface to separate API object
+- Refactor modules for code reduction
+- GUILD object to store guild info
