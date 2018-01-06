@@ -30,7 +30,7 @@ namespace NoseBot.Modules
         [Group("stats"), Name("stats")]
         public class GetStats : ModuleBase
         {
-            [Command("server")]
+            [Command("server", RunMode = RunMode.Async)]
             public async Task GetServerStats()
             {
                 Console.WriteLine("Command: Stats server");
@@ -43,7 +43,7 @@ namespace NoseBot.Modules
 
             }
 
-            [Command("all")]
+            [Command("all", RunMode = RunMode.Async)]
             public async Task GetAllStats()
             {
                 Console.WriteLine("Command: Stats All");
@@ -56,7 +56,7 @@ namespace NoseBot.Modules
 
             }
 
-            [Command("user")]
+            [Command("user", RunMode = RunMode.Async)]
             public async Task GetUserStats(string user)
             {
                 Console.WriteLine("Getting stats for user "+user);
