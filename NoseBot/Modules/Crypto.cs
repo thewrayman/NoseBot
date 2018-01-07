@@ -49,6 +49,67 @@ namespace NoseBot.Modules
 
         }
 
+        [Command("up")]
+        public async Task UpdateCryptoProfile(params string[] options)
+        {
+            Console.WriteLine("Updating crypto profile with "+options.Length +" coins");
+            if(options.Length < 1)
+            {
+                await ReplyAsync("Please supply a list of coins you want to add to your portfoloio " + Context.Message.Author.Mention);
+                return;
+            }
+
+            Dictionary<string,List<string>> userprofiles = new Dictionary<string, List<string>>();
+            //{"userid":[coin1,coin2,coin3], "userid2"...}
+            string uid = Context.Message.Author.Id.ToString();
+            string guildid = Context.Guild.Id.ToString();
+            string guildpath = FileDirUtil.GetGuildDir(guildid);
+            string portfile = Path.Combine(guildpath, FileDirUtil.PORTFOLOIOS);
+            userprofiles = JSONUtil.GetJsonToDic<string, List<string>>(portfile);
+            Console.WriteLine("Got existing profile file");
+            string message;
+
+            if (userprofiles.ContainsKey(uid))
+            {
+                userprofiles[uid] = options.ToList();
+                message = "Updated your coin profile " + Context.Message.Author.Mention + "  Check it out by using `cp`";
+            }
+            else
+            {
+                userprofiles.Add(uid, options.ToList());
+                message = "Added your coin profile " + Context.Message.Author.Mention+"  Check it out by using `cp`";
+            }
+            Console.WriteLine("writing profiles..");
+            JSONUtil.WriteJsonToFile(userprofiles, portfile);
+            Console.WriteLine("written");
+            await ReplyAsync(message);
+        }
+
+
+        [Command("cp")]
+        public async Task GetPortfolio(string cur="usd")
+        {
+            Dictionary<string, List<string>> userprofiles = new Dictionary<string, List<string>>();
+            //{"userid":[coin1,coin2,coin3], "userid2"...}
+            string uid = Context.Message.Author.Id.ToString();
+            string guildid = Context.Guild.Id.ToString();
+            string guildpath = FileDirUtil.GetGuildDir(guildid);
+            string portfile = Path.Combine(guildpath, FileDirUtil.PORTFOLOIOS);
+            userprofiles = JSONUtil.GetJsonToDic<string, List<string>>(portfile);
+
+            if(!userprofiles.ContainsKey(uid) || userprofiles.Count < 1)
+            {
+                await ReplyAsync("No existing portfolio found for " + Context.Message.Author.Mention + " please make one!");
+                return;
+            }
+
+            await ReplyAsync(Context.Message.Author.Mention + " here is your portfolio standing:");
+            foreach(var coin in userprofiles[uid])
+            {
+                PriceCheck(coin, cur);
+            }
+        }
+
         [Command("updatecoins", RunMode = RunMode.Async)]
         public async Task UpdateCoins(int count=500)
         {

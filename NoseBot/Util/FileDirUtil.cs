@@ -21,6 +21,7 @@ namespace NoseBot.Util
         public const string EVENTLOG = @"Events.txt";
         public const string PROCESSLOG = @"Log.txt";
         public const string COINS = @"coins.json";
+        public const string PORTFOLOIOS = @"portfolios.json";
 
 
         public static async Task EstablishGuildFiles(Guild guild)
