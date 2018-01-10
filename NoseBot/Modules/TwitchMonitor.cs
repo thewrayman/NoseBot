@@ -27,7 +27,7 @@ namespace NoseBot.Modules
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
 
-            List<string> names = JSONUtil.GetJsonToList<string>(Path.Combine(guildpath, FileDirUtil.JSONNAMES));
+            List<string> names = JSONUtil.GetJsonToList<string>(Path.Combine(guildpath, Constants.TemplateFiles.JSONNAMES));
             Console.WriteLine("2");
             string messagestring = "Here's the current list of streamers i'm looking out for!";
             Console.WriteLine("3");
@@ -47,8 +47,8 @@ namespace NoseBot.Modules
             Console.WriteLine("Executing start command");
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
-            string startfile = Path.Combine(guildpath, FileDirUtil.JSONSTART);
-            string stopfile = Path.Combine(guildpath, FileDirUtil.JSONSTOP);
+            string startfile = Path.Combine(guildpath, Constants.TemplateFiles.JSONSTART);
+            string stopfile = Path.Combine(guildpath, Constants.TemplateFiles.JSONSTOP);
 
             //if already running
             if (File.Exists(startfile))
@@ -86,8 +86,8 @@ namespace NoseBot.Modules
             Console.WriteLine("Executing stop command");
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
-            string startfile = Path.Combine(guildpath, FileDirUtil.JSONSTART);
-            string stopfile = Path.Combine(guildpath, FileDirUtil.JSONSTOP);
+            string startfile = Path.Combine(guildpath, Constants.TemplateFiles.JSONSTART);
+            string stopfile = Path.Combine(guildpath, Constants.TemplateFiles.JSONSTOP);
             FileStream fs = File.Create(stopfile);
             fs.Flush();
             fs.Close();
@@ -127,7 +127,7 @@ namespace NoseBot.Modules
             Console.WriteLine("Executing add command for "+streamer);
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
-            string namepath = Path.Combine(guildpath, FileDirUtil.JSONNAMES);
+            string namepath = Path.Combine(guildpath, Constants.TemplateFiles.JSONNAMES);
             List<string> names = JSONUtil.GetJsonToList<string>(namepath);
             //"Link" can be twitch link or just the channel name
             string name = MessageUtil.GetChannelNameFromMessage(streamer);
@@ -158,7 +158,7 @@ namespace NoseBot.Modules
         {
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
-            List<string> names = JSONUtil.GetJsonToList<string>(Path.Combine(guildpath, FileDirUtil.JSONNAMES));
+            List<string> names = JSONUtil.GetJsonToList<string>(Path.Combine(guildpath, Constants.TemplateFiles.JSONNAMES));
 
 
             string name = MessageUtil.GetChannelNameFromMessage(streamer);
@@ -274,7 +274,7 @@ namespace NoseBot.Modules
             string guildpath = FileDirUtil.GetGuildDir(guildid);
             try
             {
-                File.Delete(Path.Combine(guildpath, FileDirUtil.JSONSTOP));
+                File.Delete(Path.Combine(guildpath, Constants.TemplateFiles.JSONSTOP));
                 Console.WriteLine("removed stop file");
             }
             catch (Exception e)
@@ -289,9 +289,9 @@ namespace NoseBot.Modules
 
         public async Task CheckLive(SocketUserMessage msg, string guildid)
         {
-            string guildids = FileDirUtil.GetGuildFile(guildid, FileDirUtil.JSONIDS);
-            string guildlive = FileDirUtil.GetGuildFile(guildid, FileDirUtil.JSONLIVE);
-            string guildstream = FileDirUtil.GetGuildFile(guildid, FileDirUtil.JSONSTREAMS);
+            string guildids = FileDirUtil.GetGuildFile(guildid, Constants.TemplateFiles.JSONIDS);
+            string guildlive = FileDirUtil.GetGuildFile(guildid, Constants.TemplateFiles.JSONLIVE);
+            string guildstream = FileDirUtil.GetGuildFile(guildid, Constants.TemplateFiles.JSONSTREAMS);
 
             //dic of users to check; dic of last known live, list of currently live
             Dictionary<string, string> users = JSONUtil.GetJsonToDic<string, string>(guildids);

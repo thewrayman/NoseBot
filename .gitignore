@@ -51,3 +51,5 @@ master
 AudioLoader
 NoseBot/App.config
 NoseBot/App.config
+bin/
+obj/

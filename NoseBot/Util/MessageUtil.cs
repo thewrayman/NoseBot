@@ -47,9 +47,9 @@ namespace NoseBot.Util
         public static async Task GetChannelIDs(string id, bool refresh = false)
         {
             string guildpath = FileDirUtil.GetGuildDir(id);
-            string namepath = Path.Combine(guildpath, FileDirUtil.JSONNAMES);
-            string livepath = Path.Combine(guildpath, FileDirUtil.JSONLIVE);
-            string idpath = Path.Combine(guildpath, FileDirUtil.JSONIDS);
+            string namepath = Path.Combine(guildpath, Constants.TemplateFiles.JSONNAMES);
+            string livepath = Path.Combine(guildpath, Constants.TemplateFiles.JSONLIVE);
+            string idpath = Path.Combine(guildpath, Constants.TemplateFiles.JSONIDS);
 
 
             Console.WriteLine("getting channel ids");
@@ -65,7 +65,7 @@ namespace NoseBot.Util
 
             string response = TwitchMonitor.SendRequest (BaseString + "users?login=" + searchstring, null, "Channels");
             Console.WriteLine("loginresponse"+ response);
-            JSONUtil.WriteJsonToFile(null, Path.Combine(guildpath,FileDirUtil.JSONUSERS), response);
+            JSONUtil.WriteJsonToFile(null, Path.Combine(guildpath, Constants.TemplateFiles.JSONUSERS), response);
             Console.WriteLine("written users to file");
             Users users = JsonConvert.DeserializeObject<Users>(response);
             Console.WriteLine("made user obj");
@@ -97,9 +97,9 @@ namespace NoseBot.Util
         public static async Task UpdateList(string name, string id, bool remove = true)
         {
             string guildpath = FileDirUtil.GetGuildDir(id);
-            string namepath = Path.Combine(guildpath, FileDirUtil.JSONNAMES);
-            string livepath = Path.Combine(guildpath, FileDirUtil.JSONLIVE);
-            string idpath = Path.Combine(guildpath, FileDirUtil.JSONIDS);
+            string namepath = Path.Combine(guildpath, Constants.TemplateFiles.JSONNAMES);
+            string livepath = Path.Combine(guildpath, Constants.TemplateFiles.JSONLIVE);
+            string idpath = Path.Combine(guildpath, Constants.TemplateFiles.JSONIDS);
 
             List<string> names = JSONUtil.GetJsonToList<string>(namepath);
             Dictionary<string, string> live = JSONUtil.GetJsonToDic<string, string>(livepath);
