@@ -198,6 +198,7 @@
     <Compile Include="Objects\Settings.cs" />
     <Compile Include="Util\BGLogger.cs" />
     <Compile Include="Util\CommandParse.cs" />
+    <Compile Include="Util\Constants.cs" />
     <Compile Include="Util\FileDirUtil.cs" />
     <Compile Include="Util\JSONUtil.cs" />
     <Compile Include="Util\MessageUtil.cs" />
@@ -236,6 +237,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

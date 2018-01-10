@@ -31,7 +31,7 @@ namespace NoseBot.Modules
 
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
-            Dictionary<string,string> coindict = JSONUtil.GetJsonToDic<string,string>(Path.Combine(guildpath, FileDirUtil.COINS));
+            Dictionary<string,string> coindict = JSONUtil.GetJsonToDic<string,string>(Path.Combine(guildpath, Constants.TemplateFiles.COINS));
 
             string coinname = GetFullCoinName(coindict, coin);
             string message = "Could not find the coin mentioned, double check the code";
@@ -64,7 +64,7 @@ namespace NoseBot.Modules
             string uid = Context.Message.Author.Id.ToString();
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
-            string portfile = Path.Combine(guildpath, FileDirUtil.PORTFOLOIOS);
+            string portfile = Path.Combine(guildpath, Constants.TemplateFiles.PORTFOLOIOS);
             userprofiles = JSONUtil.GetJsonToDic<string, List<string>>(portfile);
             Console.WriteLine("Got existing profile file");
             string message;
@@ -94,7 +94,7 @@ namespace NoseBot.Modules
             string uid = Context.Message.Author.Id.ToString();
             string guildid = Context.Guild.Id.ToString();
             string guildpath = FileDirUtil.GetGuildDir(guildid);
-            string portfile = Path.Combine(guildpath, FileDirUtil.PORTFOLOIOS);
+            string portfile = Path.Combine(guildpath, Constants.TemplateFiles.PORTFOLOIOS);
             userprofiles = JSONUtil.GetJsonToDic<string, List<string>>(portfile);
 
             if(!userprofiles.ContainsKey(uid) || userprofiles.Count < 1)
@@ -128,7 +128,7 @@ namespace NoseBot.Modules
 
             var json = JsonConvert.DeserializeObject<List<Coin>>(response);
             json.RemoveAll(r => r.id == "bitmark");
-            Dictionary<string, string> coindict = JSONUtil.GetJsonToDic<string, string>(Path.Combine(guildpath, FileDirUtil.COINS));
+            Dictionary<string, string> coindict = JSONUtil.GetJsonToDic<string, string>(Path.Combine(guildpath, Constants.TemplateFiles.COINS));
 
             foreach (var coin in json)
             {
@@ -137,7 +137,7 @@ namespace NoseBot.Modules
                 if (!coindict.ContainsKey(symbol)) { coindict.Add(symbol, id); }
             }
             
-            JSONUtil.WriteJsonToFile(coindict, Path.Combine(guildpath, FileDirUtil.COINS));
+            JSONUtil.WriteJsonToFile(coindict, Path.Combine(guildpath, Constants.TemplateFiles.COINS));
             Console.WriteLine("updated coins json file");
             await startmsg.ModifyAsync(msg => msg.Content = "Updated coin reference");
 

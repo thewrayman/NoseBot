@@ -17,7 +17,7 @@ namespace NoseBot.Modules
         {
             Console.WriteLine("executing help command");
             string id = Context.Guild.Id.ToString();
-            string settingsfile = FileDirUtil.GetGuildFile(id, FileDirUtil.JSONSETTINGS);
+            string settingsfile = FileDirUtil.GetGuildFile(id, Constants.TemplateFiles.JSONSETTINGS);
             Settings guildsettings = JSONUtil.GetSettingsObj(id);   //get the settings for this guild
 
             string helpstring = "";
@@ -46,7 +46,7 @@ namespace NoseBot.Modules
         public async Task AddReponse(string word, string reaction)
         {
             string id = Context.Guild.Id.ToString();
-            string settingsfile = FileDirUtil.GetGuildFile(id, FileDirUtil.JSONSETTINGS);
+            string settingsfile = FileDirUtil.GetGuildFile(id, Constants.TemplateFiles.JSONSETTINGS);
             Settings guildsettings = JSONUtil.GetSettingsObj(id);
 
             bool addnew = guildsettings.AddOrModifyCommand(word.ToLower(), reaction);
@@ -68,7 +68,7 @@ namespace NoseBot.Modules
         public async Task DeleteResponse(string word)
         {
             string id = Context.Guild.Id.ToString();
-            string settingsfile = FileDirUtil.GetGuildFile(id, FileDirUtil.JSONSETTINGS);
+            string settingsfile = FileDirUtil.GetGuildFile(id, Constants.TemplateFiles.JSONSETTINGS);
             Settings guildsettings = JSONUtil.GetSettingsObj(id);
 
             bool remove = guildsettings.DelCommand(word.ToLower());
@@ -121,7 +121,7 @@ namespace NoseBot.Modules
         public async Task ChangePrefix(string newpref)
         {
             string id = Context.Guild.Id.ToString();
-            string settingsfile = FileDirUtil.GetGuildFile(id, FileDirUtil.JSONSETTINGS);
+            string settingsfile = FileDirUtil.GetGuildFile(id, Constants.TemplateFiles.JSONSETTINGS);
             Settings guildsettings = JSONUtil.GetSettingsObj(id);   //get the settings for this guild
 
             guildsettings.prefix = newpref;
@@ -138,6 +138,12 @@ namespace NoseBot.Modules
             await ReplyAsync("**Attempting to restart the bot instance..**");
             MessageUtil.AttemptGuildsMessage(Context, "**NoseBot is current restarting, apologies for the inconvenience. Monitors will be stopped**");
             ProgramUtil.RestartBot();
+        }
+
+        [Command("invite")]
+        public async Task InviteLink()
+        {
+            await ReplyAsync("My invite link:\n " + Constants.URLs.INVITEURL);
         }
     }
 }

@@ -104,7 +104,7 @@ namespace NoseBot.Util
 
         public static Settings GetSettingsObj(string id)
         {
-            string settingsfile = FileDirUtil.GetGuildFile(id, FileDirUtil.JSONSETTINGS);
+            string settingsfile = FileDirUtil.GetGuildFile(id, Constants.TemplateFiles.JSONSETTINGS);
             return JsonConvert.DeserializeObject<Settings>(File.ReadAllText(settingsfile));
         }
 

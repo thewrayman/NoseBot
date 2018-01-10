@@ -1,6 +1,9 @@
 ﻿//TODO - 06/01/2018
-- Move all strings to static string object
+- Move all strings to static string object - mostly done, verify throughout project
 - Move coinmarket to separate API object
 - Move rest interface to separate API object
 - Refactor modules for code reduction
 - GUILD object to store guild info
+- Make sure guild start copies all files correctly - needs testing
+- add logging for each method entry
+- add process logging for bot events

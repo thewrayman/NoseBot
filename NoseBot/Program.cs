@@ -62,47 +62,37 @@ namespace NoseBot
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
 
-            Guilds guilds = JsonConvert.DeserializeObject<Guilds>(File.ReadAllText(FileDirUtil.JSONGUILDS), settings);
+            Guilds guilds = JsonConvert.DeserializeObject<Guilds>(File.ReadAllText(Constants.BaseFiles.JSONGUILDS), settings);
 
             if (guilds.guilds != null)
             {
                 foreach(Guild guild in guilds.guilds)
                 {
-                    string startfile = FileDirUtil.GetGuildFile(guild.id, FileDirUtil.JSONSTART);
-                    string stopfile = FileDirUtil.GetGuildFile(guild.id, FileDirUtil.JSONSTOP);
+                    string startfile = FileDirUtil.GetGuildFile(guild.id, Constants.TemplateFiles.JSONSTART);
+                    string stopfile = FileDirUtil.GetGuildFile(guild.id, Constants.TemplateFiles.JSONSTOP);
                     if (File.Exists(startfile))
                     {
                         try
                         {
-                            File.Delete(FileDirUtil.GetGuildFile(guild.id, FileDirUtil.JSONSTART));
-                            Console.WriteLine("Cleaned up start files for " + guild.name);
+                            File.Delete(FileDirUtil.GetGuildFile(guild.id, Constants.TemplateFiles.JSONSTART));
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine("couldn't clean up start files " + e);
                         }
                     }
-                    else
-                    {
-                        Console.WriteLine("no start file present, carry on");
-                    }
-
                     if (File.Exists(stopfile))
                     {
                         try
                         {
-                            File.Delete(FileDirUtil.GetGuildFile(guild.id, FileDirUtil.JSONSTOP));
-                            Console.WriteLine("Cleaned up stop files for " + guild.name);
+                            File.Delete(FileDirUtil.GetGuildFile(guild.id, Constants.TemplateFiles.JSONSTOP));
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine("couldn't clean up stop files " + e);
                         }
                     }
-                    else
-                    {
-                        Console.WriteLine("no stop file present, carry on");
-                    }
+
 
                 }
             }
@@ -124,14 +114,14 @@ namespace NoseBot
 
         private async Task JoinedGuild(SocketGuild guild)
         {
-            Console.WriteLine("Entered guild ");
+            Console.WriteLine("Joined new guild");
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
 
-            Guilds guilds = JsonConvert.DeserializeObject<Guilds>(File.ReadAllText(FileDirUtil.JSONGUILDS), settings);//checks json containing all guilds + their settings
+            Guilds guilds = JsonConvert.DeserializeObject<Guilds>(File.ReadAllText(Constants.BaseFiles.JSONGUILDS), settings);//checks json containing all guilds + their settings
             Console.WriteLine("got guilds json");
             string id = guild.Id.ToString();
             string name = guild.Name;
@@ -142,7 +132,7 @@ namespace NoseBot
             if ((guilds.guilds == null) || !ids.Contains(id))
             {
                 string guildpath = FileDirUtil.GetGuildDir(id);
-                string settingfile = Path.Combine(guildpath, FileDirUtil.JSONSETTINGS);
+                string settingfile = Path.Combine(guildpath, Constants.TemplateFiles.JSONSETTINGS);
 
                 Console.WriteLine("new guild!");
 
@@ -157,7 +147,7 @@ namespace NoseBot
 
                 await FileDirUtil.EstablishGuildFiles(newguilld);
                 Console.WriteLine("writing guilds back to file");
-                JSONUtil.WriteJsonToFile(guilds, FileDirUtil.JSONGUILDS);
+                JSONUtil.WriteJsonToFile(guilds, Constants.BaseFiles.JSONGUILDS);
                 JSONUtil.WriteJsonToFile(gdst, settingfile);
                 Console.WriteLine("completed setting up for new guild!");
             }

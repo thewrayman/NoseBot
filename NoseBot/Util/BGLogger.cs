@@ -71,12 +71,13 @@ namespace NoseBot.Util
         protected void AsyncLogProcess(string row, string id)
         {
            //Console.WriteLine("writing to file with row: "+row);
-            File.AppendAllText(Path.Combine(FileDirUtil.GetGuildDir(id), FileDirUtil.PROCESSLOG), DateTime.Now+", "+ row + Environment.NewLine);
+            File.AppendAllText(Path.Combine(FileDirUtil.GetGuildDir(id), Constants.TemplateFiles.PROCESSLOG), DateTime.Now+", "+ row + Environment.NewLine);
             //Console.WriteLine("added to queue");
         }
         protected void AsyncLogEvent(string row)
         {
-            File.AppendAllText(FileDirUtil.GetGuildDir(FileDirUtil.EVENTLOG), row);
+            //TODO THIS SHOULD BE AN EVENT LOG FILE
+            File.AppendAllText(FileDirUtil.GetGuildDir(""), row);
         }
 
 
