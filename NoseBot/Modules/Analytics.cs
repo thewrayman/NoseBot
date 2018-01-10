@@ -124,7 +124,7 @@ namespace NoseBot.Modules
         {
             Console.WriteLine("aggregating records..");
 
-            string filepath = Path.Combine(FileDirUtil.GetGuildDir(context.Guild.Id.ToString()), FileDirUtil.PROCESSLOG);
+            string filepath = Path.Combine(FileDirUtil.GetGuildDir(context.Guild.Id.ToString()), Constants.TemplateFiles.PROCESSLOG);
             Console.WriteLine("reading from the csv file..");
             List <ChatRecord> records = File.ReadAllLines(filepath)
                                            .Select(v => FromCSV(v))
